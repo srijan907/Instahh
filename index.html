@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram Video Downloader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #E1306C, #C13584);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: white;
+      text-align: center;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+    }
+    input[type="text"] {
+      width: 85%;
+      padding: 12px;
+      border: 2px solid white;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      outline: none;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      color: white;
+      background: linear-gradient(45deg, #E1306C, #FD1D1D);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #C13584;
+    }
+    .result {
+      margin-top: 20px;
+      min-height: 50px;
+    }
+    video {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ddd;
+    }
+    .error-box {
+      background: rgba(255, 0, 0, 0.2);
+      color: #ffb3b3;
+      border: 1px solid #ff4d4d;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+    .whatsapp-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+    .whatsapp-icon {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .whatsapp-menu {
+      display: none;
+      position: absolute;
+      bottom: 70px;
+      right: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .whatsapp-menu a {
+      display: block;
+      text-decoration: none;
+      color: #333;
+      padding: 5px 10px;
+    }
+    .whatsapp-menu a:hover {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🐰 RABBIT-XD Instagram Video Downloader</h1>
+    <input type="text" id="urlInput" placeholder="Enter Instagram Reel/Video URL" />
+    <button onclick="fetchInstagramVideo()">Download</button>
+    <div id="result" class="result"></div>
+  </div>
+  <div class="footer">MADE BY MR-RABBIT</div>
+
+  <div class="whatsapp-container">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+      class="whatsapp-icon"
+      onclick="toggleWhatsAppMenu()"
+    />
+    <div class="whatsapp-menu" id="whatsappMenu">
+      <a href="https://wa.me/+919874188403" target="_blank">📞 Contact Owner</a>
+      <a href="https://wa.me/+917439382677" target="_blank">💬 Contact Helper</a>
+    </div>
+  </div>
+
+  <script>
+    function fetchInstagramVideo() {
+      const url = document.getElementById("urlInput").value;
+      const resultContainer = document.getElementById("result");
+      resultContainer.innerHTML = "";
+
+      if (!url) {
+        resultContainer.innerHTML =
+          '<div class="error-box">⚠️ Please enter a valid Instagram URL</div>';
+        return;
+      }
+
+      resultContainer.innerHTML = "<p>⏳ Fetching video...</p>";
+
+      // Proxy API (তুমি vercel-এ সেট করবে)
+      const apiUrl = `/api/igdl?url=${encodeURIComponent(url)}`;
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          resultContainer.innerHTML = "";
+          if (data.status && data.data && data.data[0] && data.data[0].url) {
+            const mediaUrl = data.data[0].url;
+            const videoElement = document.createElement("video");
+            videoElement.src = mediaUrl;
+            videoElement.controls = true;
+            resultContainer.appendChild(videoElement);
+          } else {
+            resultContainer.innerHTML =
+              '<div class="error-box">❌ Error: Video not found or private!</div>';
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching the Instagram video:", error);
+          resultContainer.innerHTML =
+            '<div class="error-box">🚨 Server Error: Unable to fetch video.</div>';
+        });
+    }
+
+    function toggleWhatsAppMenu() {
+      var menu = document.getElementById("whatsappMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
