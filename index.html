@@ -139,7 +139,7 @@
       resultContainer.innerHTML = "<p>⏳ Fetching video...</p>";
 
       //
-      const apiUrl = `/api/igdl?url=${encodeURIComponent(url)}`;
+      const apiUrl = `https://instahh.vercel.app//api/igdl?url=${encodeURIComponent(url)}`;
 
       fetch(apiUrl)
         .then((response) => response.json())
